@@ -2,8 +2,8 @@ name: Sync HackerRank Submissions
 
 on:
   schedule:
-    - cron: '0 0 * * *' # Runs daily at midnight
-  workflow_dispatch: # Allows manual trigger
+    - cron: '0 0 * * *'
+  workflow_dispatch:
 
 jobs:
   sync:
@@ -20,16 +20,23 @@ jobs:
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install requests beautifulsoup4 selenium webdriver-manager
+          pip install requests beautifulsoup4
 
-      - name: Run HackerRank Sync
+      - name: Run HackerRank Sync Script
         env:
           HACKERRANK_USERNAME: ${{ secrets.HACKERRANK_USERNAME }}
           HACKERRANK_PASSWORD: ${{ secrets.HACKERRANK_PASSWORD }}
           GH_PAT: ${{ secrets.GH_PAT }}
           GITHUB_REPOSITORY: ${{ github.repository }}
         run: |
-          python -c '
+          python - << 'EOF'
           import os
-          print("Environment loaded successfully for repository:", os.environ.get("GITHUB_REPOSITORY"))
-          '
+          import requests
+
+          username = os.environ.get("HACKERRANK_USERNAME")
+          repo = os.environ.get("GITHUB_REPOSITORY")
+
+          print(f"Starting sync setup for HackerRank user: {username}")
+          print(f"Target repository: {repo}")
+          print("Workflow environment configuration is complete.")
+          EOF
