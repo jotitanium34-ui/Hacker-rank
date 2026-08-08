@@ -1,0 +1,18 @@
+S = input()
+
+# Custom key function defining sorting priorities
+def custom_sort_key(c):
+    if c.islower():
+        return (1, c)
+    elif c.isupper():
+        return (2, c)
+    elif c.isdigit():
+        num = int(c)
+        if num % 2 != 0:
+            return (3, num)  # Odd digit
+        else:
+            return (4, num)  # Even digit
+
+# Apply sorted with key, then join the list back into a single string
+sorted_chars = sorted(S, key=custom_sort_key)
+print("".join(sorted_chars))
