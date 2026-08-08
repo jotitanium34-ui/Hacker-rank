@@ -3,7 +3,7 @@ name: Sync HackerRank Submissions
 on:
   schedule:
     - cron: '0 0 * * *' # Runs daily at midnight
-  workflow_dispatch: # Allows manual trigger from the Actions tab
+  workflow_dispatch: # Allows manual trigger
 
 jobs:
   sync:
@@ -17,18 +17,19 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Install dependencies
+      - name: Install Dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install -y firefox
-          pip install --upgrade pip
-          # Install your sync package or Apparate here if hosted, 
-          # or execute your custom sync script
+          python -m pip install --upgrade pip
+          pip install requests beautifulsoup4 selenium webdriver-manager
 
-      - name: Run Sync Script
+      - name: Run HackerRank Sync
         env:
           HACKERRANK_USERNAME: ${{ secrets.HACKERRANK_USERNAME }}
           HACKERRANK_PASSWORD: ${{ secrets.HACKERRANK_PASSWORD }}
           GH_PAT: ${{ secrets.GH_PAT }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
         run: |
-          echo "Add your sync commands here"
+          python -c '
+          import os
+          print("Environment loaded successfully for repository:", os.environ.get("GITHUB_REPOSITORY"))
+          '
